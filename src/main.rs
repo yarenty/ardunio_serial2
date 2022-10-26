@@ -114,8 +114,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         if current_minute != utc.minute() {
             let len = light.len() as i32;
             if len != 0 {
-                let l = light.iter().sum::<i32>() / len;
-                let s = sound.iter().max().ok_or(0).expect("Sound"); //iter().sum::<i32>() / sound.len() as i32;
+                //light is iversed - max value is 1024
+                let l = 1024 - light.iter().sum::<i32>() / len; 
+                //sound is tricky as it need to accumulate over time aka. sound levels
+                let s = sound.iter().max().ok_or(0).expect("Sound"); 
+                //movement is binary really
                 let m = movement.iter().max().ok_or(0).expect("Motion");
                 //send message form vecs
                 send(utc, l, *s, *m);

@@ -1,6 +1,6 @@
 [package]
 name = "serial_collector"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -16,9 +16,9 @@ env_logger = "0.9"
 
 
 
-#[profile.release]
-#strip = true # remove if using bloat
-#panic = "abort" # Strip expensive panic clean-up logic
-#codegen-units = 1 # Compile crates one after another so the compiler can optimize better
-#lto = true # Enables link to optimizations
-#opt-level = "s" # Optimize for binary size - try "z"
+[profile.release]
+strip = true # remove if using bloat
+panic = "abort" # Strip expensive panic clean-up logic
+codegen-units = 1 # Compile crates one after another so the compiler can optimize better
+lto = true # Enables link to optimizations
+opt-level = "s" # Optimize for binary size - try "z"

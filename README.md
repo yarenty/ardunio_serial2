@@ -28,9 +28,19 @@ sudo apt remove brltty
 ```
 
 
+## CHANGELOG
+v0.1.1:
+- fixed light - it is reversed (max vol: 1024);
+- small binary release (3X+); 
 
+v0.1.0:
+ - initial release;
+ - port scanning ability;
+ - restart ability (works on Mac);
 
 ## TODO
-
+- restart should rescan all ports - ie. ubuntu assigns new ttyUSB{x} port
 - add CLI support
 - check/clean parsing errors
+- clean libraries
+- add TUI?
