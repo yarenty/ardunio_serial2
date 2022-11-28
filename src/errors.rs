@@ -1,3 +1,4 @@
+use std::string::FromUtf8Error;
 use thiserror::Error;
 
 pub type Result<T> = std::result::Result<T, CollectorError>;
@@ -10,7 +11,7 @@ pub enum CollectorError {
     /// general errors we don't know where to put
     #[error("{0}")]
     General(String),
-    /// deserialization errors
+    /// Conversion errors
     #[error("{0}")]
-    Format(String),
+    Conversion(#[from] FromUtf8Error),
 }
