@@ -1,8 +1,6 @@
-use std::borrow::BorrowMut;
 use std::cell::Cell;
 use std::io;
 use std::io::Read;
-use std::rc::Rc;
 use std::thread::sleep;
 use std::time::Duration;
 
@@ -73,9 +71,10 @@ fn get_port(name: &String, baud_rate: u32) -> Cell<Box<dyn SerialPort>> {
     }
 }
 
+#[allow(dead_code)]
 fn checks(mut port: Cell<Box<dyn SerialPort>>) -> Result<()> {
     let baud_rate = 9600;
-    let mut port = port.get_mut();
+    let port = port.get_mut();
     baud_rate_check!(port, baud_rate);
     data_bits_check!(port, DataBits::Eight);
     flow_control_check!(port, FlowControl::None);
@@ -194,7 +193,7 @@ fn main() -> Result<()> {
     let name = &find_port()?;
     let baud_rate = 9600;
 
-    let mut port = get_port(name, baud_rate);
+    let port = get_port(name, baud_rate);
 
     // checks(port)?;
 
