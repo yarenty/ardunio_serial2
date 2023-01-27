@@ -3,6 +3,7 @@ use thiserror::Error;
 
 pub type Result<T> = std::result::Result<T, CollectorError>;
 
+#[allow(dead_code)]
 #[derive(Error, Debug)]
 pub enum CollectorError {
     /// IO related errors
