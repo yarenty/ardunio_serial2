@@ -17,8 +17,6 @@ use crate::errors::Result;
 mod errors;
 mod utils;
 
-
-
 fn find_port() -> Result<String> {
     for i in 1..3 {
         sleep(Duration::from_millis(100));
@@ -65,7 +63,6 @@ fn find_port() -> Result<String> {
     panic!("Port not found")
 }
 
-
 fn get_port(name: &String, baud_rate: u32) -> Cell<Box<dyn SerialPort>> {
     match serialport::new(name, baud_rate).open() {
         Err(e) => {
@@ -87,8 +84,6 @@ fn checks(mut port: Cell<Box<dyn SerialPort>>) -> Result<()> {
     Ok(())
 }
 
-
-
 fn collect_and_send(mut port: Cell<Box<dyn SerialPort>>) -> Result<()> {
     let mut sound: Vec<i32> = vec![];
     let mut light: Vec<i32> = vec![];
@@ -104,10 +99,10 @@ fn collect_and_send(mut port: Cell<Box<dyn SerialPort>>) -> Result<()> {
     loop {
         match port.get_mut().read(serial_buf.as_mut_slice()) {
             Ok(t) => {
-// io::stdout().write_all(&serial_buf[..t]).unwrap()
+                // io::stdout().write_all(&serial_buf[..t]).unwrap()
                 let msg = String::from_utf8(serial_buf[..t].to_vec())?;
                 trace!("{:?}", msg);
-// process add to vec
+                // process add to vec
                 for m in msg.split("\r\n") {
                     trace!("m:{}", m);
                     if m.len() > 10 {
@@ -154,7 +149,7 @@ fn collect_and_send(mut port: Cell<Box<dyn SerialPort>>) -> Result<()> {
             Err(e) => {
                 warn!("Connection error: {:?}, restarting in 5 sec..", e);
                 sleep(Duration::from_millis(5000));
-// exit(1);
+                // exit(1);
                 port = get_port(&find_port()?, 9600);
             }
         }
@@ -164,26 +159,24 @@ fn collect_and_send(mut port: Cell<Box<dyn SerialPort>>) -> Result<()> {
         if current_minute != utc.minute() {
             let len = light.len() as i32;
             if len != 0 {
-//light is iversed - max value is 1024
+                //light is inversed - max value is 1024
                 let l = 1024 - light.iter().sum::<i32>() / len;
-//sound is tricky as it need to accumulate over time aka. sound levels
+                //sound is tricky as it need to accumulate over time aka. sound levels
                 let s = sound.iter().max().ok_or(0).expect("Sound");
-//movement is binary really
+                //movement is binary really
                 let m = movement.iter().max().ok_or(0).expect("Motion");
-//send message form vecs
+                //send message form vecs
                 send(utc, l, *s, *m);
             }
-//clean vecs
+            //clean vecs
             light = vec![];
             sound = vec![];
             movement = vec![];
-// next min
+            // next min
             current_minute = utc.minute();
         }
     }
 }
-
-
 
 fn send(date: DateTime<Utc>, light: i32, sound: i32, motion: i32) {
     let send_me = format!("http://www.yarenty.com/ardunio/add.php?year={}&month={}&day={}&hour={}&minute={}&light={}&sound={}&motion={}",
@@ -195,27 +188,17 @@ fn send(date: DateTime<Utc>, light: i32, sound: i32, motion: i32) {
     info!("{}", &send_me);
 }
 
-
-
-
-
-
 fn main() -> Result<()> {
     setup_logger(true, Some("info"));
-    
+
     let name = &find_port()?;
     let baud_rate = 9600;
-    
+
     let mut port = get_port(name, baud_rate);
 
     // checks(port)?;
-    
+
     collect_and_send(port)?;
-    
+
     Ok(())
 }
-
-
-
-
-
